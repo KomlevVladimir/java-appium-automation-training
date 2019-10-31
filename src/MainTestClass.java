@@ -14,7 +14,6 @@ public class MainTestClass {
                 actualResult + " is not equal to 14",
                 14,
                 actualResult
-
         );
     }
 
