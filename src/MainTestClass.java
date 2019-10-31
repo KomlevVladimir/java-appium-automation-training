@@ -34,8 +34,7 @@ public class MainTestClass {
 
         assertTrue(
                 actualResult + " does not contain the substring Hello or hello",
-                actualResult.matches(".*[Hh]ello.*"
-                )
+                actualResult.matches(".*[Hh]ello.*")
         );
     }
 }
