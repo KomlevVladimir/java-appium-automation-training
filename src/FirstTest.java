@@ -1,7 +1,6 @@
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.android.AndroidDriver;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -12,6 +11,9 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+
+import static org.junit.Assert.assertEquals;
+import static org.openqa.selenium.By.xpath;
 
 public class FirstTest {
     private AppiumDriver driver;
@@ -46,17 +48,17 @@ public class FirstTest {
     @Test
     public void checkThatSearchInputContainsTextSearchTest() {
         waitForElementAndClick(
-                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
+                xpath("//*[contains(@text, 'Search Wikipedia')]"),
                 "Could not find 'Search Wikipedia' input",
                 5
         );
         String actualResult = waitForElementPresent(
-                By.xpath("//*[@resource-id='org.wikipedia:id/search_src_text']"),
+                xpath("//*[@resource-id='org.wikipedia:id/search_src_text']"),
                 "Could not find search input",
                 5
         ).getText();
 
-        Assert.assertEquals("Search input does not contain 'Search…' text", "Search…", actualResult);
+        assertEquals("Search input does not contain 'Search…' text", "Search…", actualResult);
     }
 
     @After
