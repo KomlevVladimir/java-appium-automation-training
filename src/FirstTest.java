@@ -11,7 +11,9 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.openqa.selenium.By.xpath;
 
@@ -30,19 +32,10 @@ public class FirstTest {
         return element;
     }
 
-    private boolean checkThatSearchInputContainsText(String text) {
-        waitForElementAndClick(
-                xpath("//*[contains(@text, 'Search Wikipedia')]"),
-                "Could not find 'Search Wikipedia' input",
-                5
-        );
-        String actualText = waitForElementPresent(
-                xpath("//*[@resource-id='org.wikipedia:id/search_src_text']"),
-                "Could not find search input",
-                5
-        ).getText();
-        return actualText.contains(text);
-
+    private WebElement waitElementAndSendKeys(By by, String value, String errorMessage, long timeoutInSeconds) {
+        WebElement element = waitForElementPresent(by, errorMessage, timeoutInSeconds);
+        element.sendKeys(value);
+        return element;
     }
 
     @Before
@@ -61,11 +54,34 @@ public class FirstTest {
     }
 
     @Test
-    public void checkThatSearchInputContainsTextSearchTest() {
-        assertTrue(
-                "Search input does not contain 'Search…' text",
-                checkThatSearchInputContainsText("Search…")
+    public void cancelSearchTest() {
+        waitForElementAndClick(
+                xpath("//*[contains(@text, 'Search Wikipedia')]"),
+                "Could not find 'Search Wikipedia' input",
+                5
         );
+        waitElementAndSendKeys(
+                xpath("//*[@resource-id='org.wikipedia:id/search_src_text']"),
+                "Java",
+                "Could not find search input",
+                5
+        );
+        List elementsAfterSearch = driver.findElementsByXPath(
+                "//*[@resource-id='org.wikipedia:id/page_list_item_container']"
+        );
+
+        assertTrue(elementsAfterSearch.size() + " articles found", elementsAfterSearch.size() > 0);
+
+        waitForElementAndClick(
+                xpath("//*[@resource-id='org.wikipedia:id/search_close_btn']"),
+                "Could not find close button",
+                5
+        );
+        List elementsAfterCancelSearch = driver.findElementsByXPath(
+                "//*[@resource-id='org.wikipedia:id/page_list_item_container']"
+        );
+
+        assertEquals("Search not canceled", 0, elementsAfterCancelSearch.size());
     }
 
     @After
