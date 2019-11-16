@@ -53,7 +53,7 @@ public class FirstTest {
     }
 
     @Test
-    public void checkThatEveryTitleContainSearchTextTest() {
+    public void checkThatEveryTitleContainsSearchTextTest() {
         String text = "Java";
         waitForElementAndClick(
                 xpath("//*[contains(@text, 'Search Wikipedia')]"),
