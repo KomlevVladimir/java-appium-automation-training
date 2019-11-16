@@ -13,6 +13,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.openqa.selenium.By.xpath;
 
@@ -53,8 +54,7 @@ public class FirstTest {
     }
 
     @Test
-    public void checkThatEveryTitleContainSearchTextTest() {
-        String text = "Java";
+    public void cancelSearchTest() {
         waitForElementAndClick(
                 xpath("//*[contains(@text, 'Search Wikipedia')]"),
                 "Could not find 'Search Wikipedia' input",
@@ -62,20 +62,26 @@ public class FirstTest {
         );
         waitElementAndSendKeys(
                 xpath("//*[@resource-id='org.wikipedia:id/search_src_text']"),
-                text,
+                "Java",
                 "Could not find search input",
                 5
         );
-        List<WebElement> elements = driver.findElementsByXPath(
-                "//*[@resource-id='org.wikipedia:id/page_list_item_title']"
+        List<WebElement> elementsAfterSearch = driver.findElementsByXPath(
+                "//*[@resource-id='org.wikipedia:id/page_list_item_container']"
         );
 
-        for (WebElement element: elements) {
-            assertTrue(
-                    text + " word is absent in the " + element.getText() + " title",
-                    element.getText().contains(text)
-            );
-        }
+        assertTrue(elementsAfterSearch.size() + " articles found", elementsAfterSearch.size() > 0);
+
+        waitForElementAndClick(
+                xpath("//*[@resource-id='org.wikipedia:id/search_close_btn']"),
+                "Could not find close button",
+                5
+        );
+        List<WebElement> elementsAfterCancelSearch = driver.findElementsByXPath(
+                "//*[@resource-id='org.wikipedia:id/page_list_item_container']"
+        );
+
+        assertEquals("Search not canceled", 0, elementsAfterCancelSearch.size());
     }
 
     @After
