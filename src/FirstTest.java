@@ -12,7 +12,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.openqa.selenium.By.xpath;
 
 public class FirstTest {
@@ -28,6 +28,21 @@ public class FirstTest {
         WebElement element = waitForElementPresent(by, errorMessage, timeoutInSeconds);
         element.click();
         return element;
+    }
+
+    private boolean checkThatSearchInputContainsText(String text) {
+        waitForElementAndClick(
+                xpath("//*[contains(@text, 'Search Wikipedia')]"),
+                "Could not find 'Search Wikipedia' input",
+                5
+        );
+        String actualText = waitForElementPresent(
+                xpath("//*[@resource-id='org.wikipedia:id/search_src_text']"),
+                "Could not find search input",
+                5
+        ).getText();
+        return actualText.contains(text);
+
     }
 
     @Before
@@ -47,18 +62,10 @@ public class FirstTest {
 
     @Test
     public void checkThatSearchInputContainsTextSearchTest() {
-        waitForElementAndClick(
-                xpath("//*[contains(@text, 'Search Wikipedia')]"),
-                "Could not find 'Search Wikipedia' input",
-                5
+        assertTrue(
+                "Search input does not contain 'Search…' text",
+                checkThatSearchInputContainsText("Search…")
         );
-        String actualResult = waitForElementPresent(
-                xpath("//*[@resource-id='org.wikipedia:id/search_src_text']"),
-                "Could not find search input",
-                5
-        ).getText();
-
-        assertEquals("Search input does not contain 'Search…' text", "Search…", actualResult);
     }
 
     @After
