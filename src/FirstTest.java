@@ -66,22 +66,25 @@ public class FirstTest {
                 "Could not find search input",
                 5
         );
-        List<WebElement> elementsAfterSearch = driver.findElementsByXPath(
-                "//*[@resource-id='org.wikipedia:id/page_list_item_container']"
+        List<WebElement> articleTitlesAfterSearch = driver.findElementsByXPath(
+                "//*[@resource-id='org.wikipedia:id/page_list_item_title']"
         );
 
-        assertTrue(elementsAfterSearch.size() + " articles found", elementsAfterSearch.size() > 0);
+        assertTrue(
+                articleTitlesAfterSearch.size() + " articles found",
+                articleTitlesAfterSearch.size() > 0
+        );
 
         waitForElementAndClick(
                 xpath("//*[@resource-id='org.wikipedia:id/search_close_btn']"),
                 "Could not find close button",
                 5
         );
-        List<WebElement> elementsAfterCancelSearch = driver.findElementsByXPath(
-                "//*[@resource-id='org.wikipedia:id/page_list_item_container']"
+        List<WebElement> articleTitlesAfterCancelSearch = driver.findElementsByXPath(
+                "//*[@resource-id='org.wikipedia:id/page_list_item_title']"
         );
 
-        assertEquals("Search not canceled", 0, elementsAfterCancelSearch.size());
+        assertEquals("Search not canceled", 0, articleTitlesAfterCancelSearch.size());
     }
 
     @After
