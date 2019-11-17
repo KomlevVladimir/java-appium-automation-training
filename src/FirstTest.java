@@ -74,7 +74,6 @@ public class FirstTest {
                 text + " word is absent in the " + t.getText() + " title",
                 t.getText().contains(text)
         ));
-
     }
 
     @After
