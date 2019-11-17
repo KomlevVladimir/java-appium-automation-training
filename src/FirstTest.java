@@ -66,16 +66,15 @@ public class FirstTest {
                 "Could not find search input",
                 5
         );
-        List<WebElement> elements = driver.findElementsByXPath(
+        List<WebElement> titles = driver.findElementsByXPath(
                 "//*[@resource-id='org.wikipedia:id/page_list_item_title']"
         );
 
-        for (WebElement element: elements) {
-            assertTrue(
-                    text + " word is absent in the " + element.getText() + " title",
-                    element.getText().contains(text)
-            );
-        }
+        titles.forEach(t -> assertTrue(
+                text + " word is absent in the " + t.getText() + " title",
+                t.getText().contains(text)
+        ));
+
     }
 
     @After
