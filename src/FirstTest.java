@@ -30,7 +30,7 @@ public class FirstTest {
         return element;
     }
 
-    private boolean checkThatSearchInputContainsText(String text) {
+    private boolean checkThatSearchInputContainsText() {
         waitForElementAndClick(
                 xpath("//*[contains(@text, 'Search Wikipedia')]"),
                 "Could not find 'Search Wikipedia' input",
@@ -41,7 +41,7 @@ public class FirstTest {
                 "Could not find search input",
                 5
         ).getText();
-        return actualText.contains(text);
+        return actualText.contains("Search…");
 
     }
 
@@ -64,7 +64,7 @@ public class FirstTest {
     public void checkThatSearchInputContainsTextSearchTest() {
         assertTrue(
                 "Search input does not contain 'Search…' text",
-                checkThatSearchInputContainsText("Search…")
+                checkThatSearchInputContainsText()
         );
     }
 
