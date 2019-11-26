@@ -13,6 +13,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import static org.openqa.selenium.By.xpath;
+import static org.openqa.selenium.ScreenOrientation.LANDSCAPE;
+import static org.openqa.selenium.ScreenOrientation.PORTRAIT;
 
 public class FirstTest {
     private AppiumDriver driver;
@@ -62,11 +64,15 @@ public class FirstTest {
         capabilities.setCapability("app", "/home/npa/petprojects/java-appium-automation-training/apks/org.wikipedia.apk");
 
         driver = new AndroidDriver(new URL("http://localhost:4723/wd/hub"), capabilities);
+
+        if (driver.getOrientation() == PORTRAIT) {
+            driver.rotate(PORTRAIT);
+        }
     }
 
     @Test
-    public void assertTitleTest() {
-        String text = "Appium";
+    public void firstScreenRotationTest() {
+        String text = "Java";
 
         waitForElementAndClick(
                 xpath("//*[contains(@text, 'Search Wikipedia')]"),
@@ -79,14 +85,34 @@ public class FirstTest {
                 "Could not find search input",
                 5
         );
+        driver.rotate(LANDSCAPE);
         waitForElementAndClick(
                 xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='" + text + "']"),
-                "Could find the 'Appium' article",
+                "Could find the " + text + "' article",
                 5
         );
-        assertElementPresent(
-                xpath("//*[@resource-id='org.wikipedia:id/view_page_title_text']"),
-                "We did not find any results by request " + text
+    }
+
+    @Test
+    public void secondScreenRotationTest() {
+        String text = "gdfgdfgdfgdfg";
+
+        waitForElementAndClick(
+                xpath("//*[contains(@text, 'Search Wikipedia')]"),
+                "Could not find 'Search Wikipedia' input",
+                5
+        );
+        waitElementAndSendKeys(
+                xpath("//*[@resource-id='org.wikipedia:id/search_src_text']"),
+                text,
+                "Could not find search input",
+                5
+        );
+        driver.rotate(LANDSCAPE);
+        waitForElementAndClick(
+                xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='" + text + "']"),
+                "Could find the " + text + "' article",
+                5
         );
     }
 
