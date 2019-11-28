@@ -1,97 +1,81 @@
-import io.appium.java_client.AppiumDriver;
-import io.appium.java_client.android.AndroidDriver;
-import org.junit.After;
-import org.junit.Before;
+import lib.CoreTestCase;
+import lib.ui.*;
 import org.junit.Test;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.util.List;
 
-import static org.openqa.selenium.By.xpath;
+public class FirstTest extends CoreTestCase {
 
-public class FirstTest {
-    private AppiumDriver driver;
-
-    private WebElement waitForElementPresent(By by, String errorMessage, long timeoutInSeconds) {
-        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        wait.withMessage(errorMessage + "\n");
-        return wait.until(ExpectedConditions.presenceOfElementLocated(by));
-    }
-
-    private WebElement waitForElementAndClick(By by, String errorMessage, long timeoutInSeconds) {
-        WebElement element = waitForElementPresent(by, errorMessage, timeoutInSeconds);
-        element.click();
-        return element;
-    }
-
-    private WebElement waitElementAndSendKeys(By by, String value, String errorMessage, long timeoutInSeconds) {
-        WebElement element = waitForElementPresent(by, errorMessage, timeoutInSeconds);
-        element.sendKeys(value);
-        return element;
-    }
-
-    private WebElement waitElementAndClear(By by, String errorMessage, long timeoutInSeconds) {
-        WebElement element = waitForElementPresent(by, errorMessage, timeoutInSeconds);
-        element.clear();
-        return element;
-    }
-
-    private void assertElementPresent(By by, String errorMessage) {
-        int amountOfElements = driver.findElements(by).size();
-        if (amountOfElements == 0) {
-            String defaultMessage = "An elements " + by.toString() + " supposed to be not present";
-            throw new AssertionError(defaultMessage + " " + errorMessage);
-        }
-    }
-
-    @Before
-    public void setUp() throws MalformedURLException {
-        DesiredCapabilities capabilities = new DesiredCapabilities();
-
-        capabilities.setCapability("platformName", "Android");
-        capabilities.setCapability("deviceName", "AndroidTestDevice");
-        capabilities.setCapability("platformVersion", "9.0");
-        capabilities.setCapability("automationName", "Appium");
-        capabilities.setCapability("appPackage", "org.wikipedia");
-        capabilities.setCapability("appActivity", ".main.MainActivity");
-        capabilities.setCapability("app", "/home/npa/petprojects/java-appium-automation-training/apks/org.wikipedia.apk");
-
-        driver = new AndroidDriver(new URL("http://localhost:4723/wd/hub"), capabilities);
+    protected void setUp() throws Exception {
+        super.setUp();
     }
 
     @Test
-    public void assertTitleTest() {
-        String text = "Appium";
+    public void testCancelSearch() {
+        SearchPageObject searchPageObject = new SearchPageObject(driver);
+        searchPageObject.initSearchInput();
+        searchPageObject.typeSearchLine("Java");
+        List articleTitlesAfterSearch = searchPageObject.getFoundArticles();
 
-        waitForElementAndClick(
-                xpath("//*[contains(@text, 'Search Wikipedia')]"),
-                "Could not find 'Search Wikipedia' input",
-                5
+        assertTrue(
+                articleTitlesAfterSearch.size() + " articles found",
+                articleTitlesAfterSearch.size() > 0
         );
-        waitElementAndSendKeys(
-                xpath("//*[@resource-id='org.wikipedia:id/search_src_text']"),
-                text,
-                "Could not find search input",
-                5
-        );
-        waitForElementAndClick(
-                xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='" + text + "']"),
-                "Could find the 'Appium' article",
-                5
-        );
-        assertElementPresent(
-                xpath("//*[@resource-id='org.wikipedia:id/view_page_title_text']"),
-                "We did not find any results by request " + text
+
+        searchPageObject.clickCancelSearch();
+        List articleTitlesAfterCancelSearch = searchPageObject.getFoundArticles();
+
+        assertEquals("Search not canceled", 0, articleTitlesAfterCancelSearch.size());
+    }
+
+    @Test
+    public void testSaveTwoArticles() {
+        String searchLine = "Java";
+        String folderName = "Java folder";
+        SearchPageObject searchPageObject = new SearchPageObject(driver);
+        searchPageObject.initSearchInput();
+        searchPageObject.typeSearchLine(searchLine);
+        searchPageObject.clickByArticleWithSubstring("Island of Indonesia");
+        ArticlePageObject articlePageObject = new ArticlePageObject(driver);
+        articlePageObject.waitForTitleElement();
+        String firstArticleTitle = articlePageObject.getArticleTitle();
+        articlePageObject.addArticleToMyListAndCreateFolder(folderName);
+        articlePageObject.closeArticle();
+        searchPageObject.initSearchInput();
+        searchPageObject.typeSearchLine(searchLine);
+        searchPageObject.clickByArticleWithSubstring("Object-oriented programming language");
+        articlePageObject.waitForTitleElement();
+        String secondArticleTitle = articlePageObject.getArticleTitle();
+        articlePageObject.addArticleToMyList(folderName);
+        articlePageObject.closeArticle();
+        NavigationUI navigationUI = new NavigationUI(driver);
+        navigationUI.clickMyLists();
+        MyListsPageObject myListsPageObject = new MyListsPageObject(driver);
+        myListsPageObject.openFolderByName(folderName);
+        FolderPageObject folderPageObject = new FolderPageObject(driver);
+        folderPageObject.swipeByArticleToDelete(firstArticleTitle);
+        List articles = folderPageObject.getAllArticles();
+
+        assertEquals("The number of articles is not equal to 1", 1, articles.size());
+
+        folderPageObject.clickByArticleWithTitle(secondArticleTitle);
+        String actualArticleTitle = articlePageObject.getArticleTitle();
+
+        assertEquals(
+                actualArticleTitle + " is not equal to " + secondArticleTitle,
+                secondArticleTitle,
+                actualArticleTitle
         );
     }
 
-    @After
-    public void tearDown() {
-        driver.quit();
+    @Test
+    public void testAssertTitle() {
+        String searchLine = "Appium";
+        SearchPageObject searchPageObject = new SearchPageObject(driver);
+        searchPageObject.initSearchInput();
+        searchPageObject.typeSearchLine(searchLine);
+        searchPageObject.clickByArticleWithSubstring("Appium");
+        ArticlePageObject articlePageObject = new ArticlePageObject(driver);
+        articlePageObject.assertTitleIsPresent();
     }
 }
