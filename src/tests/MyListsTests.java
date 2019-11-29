@@ -1,32 +1,12 @@
+package tests;
+
 import lib.CoreTestCase;
 import lib.ui.*;
 import org.junit.Test;
 
 import java.util.List;
 
-public class FirstTest extends CoreTestCase {
-
-    protected void setUp() throws Exception {
-        super.setUp();
-    }
-
-    @Test
-    public void testCancelSearch() {
-        SearchPageObject searchPageObject = new SearchPageObject(driver);
-        searchPageObject.initSearchInput();
-        searchPageObject.typeSearchLine("Java");
-        List articleTitlesAfterSearch = searchPageObject.getFoundArticles();
-
-        assertTrue(
-                articleTitlesAfterSearch.size() + " articles found",
-                articleTitlesAfterSearch.size() > 0
-        );
-
-        searchPageObject.clickCancelSearch();
-        List articleTitlesAfterCancelSearch = searchPageObject.getFoundArticles();
-
-        assertEquals("Search not canceled", 0, articleTitlesAfterCancelSearch.size());
-    }
+public class MyListsTests extends CoreTestCase {
 
     @Test
     public void testSaveTwoArticles() {
@@ -66,16 +46,5 @@ public class FirstTest extends CoreTestCase {
                 secondArticleTitle,
                 actualArticleTitle
         );
-    }
-
-    @Test
-    public void testAssertTitle() {
-        String searchLine = "Appium";
-        SearchPageObject searchPageObject = new SearchPageObject(driver);
-        searchPageObject.initSearchInput();
-        searchPageObject.typeSearchLine(searchLine);
-        searchPageObject.clickByArticleWithSubstring("Appium");
-        ArticlePageObject articlePageObject = new ArticlePageObject(driver);
-        articlePageObject.assertTitleIsPresent();
     }
 }
