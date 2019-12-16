@@ -6,6 +6,7 @@ import junit.framework.TestCase;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import java.net.URL;
+import java.time.Duration;
 
 import static org.openqa.selenium.ScreenOrientation.LANDSCAPE;
 import static org.openqa.selenium.ScreenOrientation.PORTRAIT;
@@ -47,7 +48,7 @@ public class CoreTestCase extends TestCase {
         driver.rotate(LANDSCAPE);
     }
 
-    protected void backgroundApp(int seconds) {
+    protected void backgroundApp(Duration seconds) {
         driver.runAppInBackground(seconds);
     }
 }

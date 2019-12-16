@@ -2,10 +2,16 @@ package lib.ui;
 
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.TouchAction;
+import io.appium.java_client.touch.WaitOptions;
+import io.appium.java_client.touch.offset.PointOption;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.time.Duration;
+
+import static java.time.Duration.ofMillis;
 
 public class MainPageObject {
     protected AppiumDriver driver;
@@ -61,10 +67,11 @@ public class MainPageObject {
         int middleY = (upperY + lowerY) / 2;
 
         TouchAction action = new TouchAction(driver);
+        PointOption point = new PointOption();
         action
-                .press(rightX, middleY)
-                .waitAction(150)
-                .moveTo(leftX, middleY)
+                .press(point.withCoordinates(rightX, middleY))
+                .waitAction(new WaitOptions().withDuration(ofMillis(150)))
+                .moveTo(point.withCoordinates(leftX, middleY))
                 .release()
                  .perform();
     }
