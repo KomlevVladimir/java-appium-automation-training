@@ -1,6 +1,7 @@
 package lib.ui;
 
 import io.appium.java_client.AppiumDriver;
+import org.openqa.selenium.By;
 
 import java.util.List;
 
@@ -37,7 +38,8 @@ public class FolderPageObject extends MainPageObject {
     }
 
     public List getAllArticles() {
-        return driver.findElements(xpath(ARTICLES));
+        By by = getLocatorByString(ARTICLES);
+        return driver.findElements(by);
     }
 
     public void swipeByArticleToDelete(String articleTitle) {

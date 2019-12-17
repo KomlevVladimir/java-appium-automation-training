@@ -9,6 +9,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.util.List;
 import java.util.regex.Pattern;
 
 import static java.time.Duration.ofMillis;
@@ -54,11 +55,16 @@ public class MainPageObject {
         return element;
     }
 
-    public void assertElementPresent(String locator, String errorMessage) {
+    public int getAmountOfElements(String locator) {
         By by = this.getLocatorByString(locator);
-        int amountOfElements = driver.findElements(by).size();
+        List elements = driver.findElements(by);
+        return elements.size();
+    }
+
+    public void assertElementPresent(String locator, String errorMessage) {
+        int amountOfElements = getAmountOfElements(locator);
         if (amountOfElements == 0) {
-            String defaultMessage = "An elements " + by.toString() + " supposed to be not present";
+            String defaultMessage = "An elements " + locator + " supposed to be not present";
             throw new AssertionError(defaultMessage + " " + errorMessage);
         }
     }
@@ -81,7 +87,7 @@ public class MainPageObject {
                  .perform();
     }
 
-    private By getLocatorByString(String locatorWithType) {
+    protected By getLocatorByString(String locatorWithType) {
         String[] explodedLocator = locatorWithType.split(Pattern.quote(":"), 2);
         String byType = explodedLocator[0];
         String locator = explodedLocator[1];

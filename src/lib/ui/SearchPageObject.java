@@ -1,11 +1,10 @@
 package lib.ui;
 
 import io.appium.java_client.AppiumDriver;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 import java.util.List;
-
-import static org.openqa.selenium.By.xpath;
 
 public class SearchPageObject extends MainPageObject {
     private static final String
@@ -69,7 +68,8 @@ public class SearchPageObject extends MainPageObject {
     }
 
     public List getFoundArticles() {
-        return driver.findElements(xpath(SEARCH_RESULT_ELEMENT));
+        By by = getLocatorByString(SEARCH_RESULT_ELEMENT);
+        return driver.findElements(by);
     }
 
     public void clickByArticleWithSubstring(String substring) {
