@@ -8,8 +8,8 @@ import static org.openqa.selenium.By.xpath;
 
 public class FolderPageObject extends MainPageObject {
     private static final String
-        ARTICLES = "//*[@resource-id='org.wikipedia:id/page_list_item_container']",
-        ARTICLE_BY_TITLE_TPL = "//*[@text='{TITLE}']";
+        ARTICLES = "xpath://*[@resource-id='org.wikipedia:id/page_list_item_container']",
+        ARTICLE_BY_TITLE_TPL = "xpath://*[@text='{TITLE}']";
 
     public FolderPageObject(AppiumDriver driver) {
         super(driver);
@@ -22,7 +22,7 @@ public class FolderPageObject extends MainPageObject {
     public void waitForArticleToAppearByTitle(String articleTitle) {
         String articleXpath = getSavedArticleXpathByTitle(articleTitle);
         this.waitForElementPresent(
-                xpath(articleXpath),
+                articleXpath,
                 "Could not find saved article with title" + articleTitle,
                 15
         );
@@ -31,7 +31,7 @@ public class FolderPageObject extends MainPageObject {
     public void waitForArticleToDisappearByTitle(String articleTitle) {
         String articleXpath = getSavedArticleXpathByTitle(articleTitle);
         this.waitForElementNotPresent(
-                xpath(articleXpath),
+                articleXpath,
                 "Saved article still present with title" + articleTitle,
                 15);
     }
@@ -44,7 +44,7 @@ public class FolderPageObject extends MainPageObject {
         this.waitForArticleToAppearByTitle(articleTitle);
         String articleXpath = getSavedArticleXpathByTitle(articleTitle);
         this.swipeElementToLeft(
-                xpath(articleXpath),
+                articleXpath,
                 "Could not find saver article with title" + articleTitle
         );
         this.waitForArticleToDisappearByTitle(articleTitle);
@@ -53,7 +53,7 @@ public class FolderPageObject extends MainPageObject {
     public void clickByArticleWithTitle(String articleTitle) {
         String articleTitleXpath = getSavedArticleXpathByTitle(articleTitle);
         this.waitForElementAndClick(
-                xpath(articleTitleXpath),
+                articleTitleXpath,
                 "Could not find article with title " + articleTitle,
                 5
         );
