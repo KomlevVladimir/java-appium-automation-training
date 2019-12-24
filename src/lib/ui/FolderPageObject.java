@@ -66,11 +66,11 @@ abstract public class FolderPageObject extends MainPageObject {
 
     public void assertThatArticleIsPresent(String article) {
         String articleXpath = getSavedArticleXpathByTitle(article);
-        this.assertElementPresent(articleXpath, "Article is not present on the screen");
+        this.assertElementPresent(articleXpath, "Article " + article + "is not present on the screen");
     }
 
     public void assertThatArticleIsNotPresent(String article) {
         String articleXpath = getSavedArticleXpathByTitle(article);
-        this.assertElementNotPresent(articleXpath, "Article is present on the screen");
+        this.assertElementNotPresent(articleXpath, "Article " + article + "is present on the screen");
     }
 }
