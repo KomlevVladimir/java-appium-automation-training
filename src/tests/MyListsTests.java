@@ -6,8 +6,6 @@ import lib.ui.*;
 import lib.ui.factories.*;
 import org.junit.Test;
 
-import java.util.List;
-
 public class MyListsTests extends CoreTestCase {
 
     @Test
