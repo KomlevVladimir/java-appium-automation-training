@@ -28,7 +28,7 @@ abstract public class ArticlePageObject extends MainPageObject {
         return this.waitForElementPresent(
                 ARTICLE_TITLE,
                 "Could not find article title on screen",
-                10
+                15
         );
     }
 
