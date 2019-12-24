@@ -1,7 +1,9 @@
 package tests;
 
 import lib.CoreTestCase;
+import lib.Platform;
 import lib.ui.*;
+import lib.ui.factories.*;
 import org.junit.Test;
 
 import java.util.List;
@@ -12,39 +14,45 @@ public class MyListsTests extends CoreTestCase {
     public void testSaveTwoArticles() {
         String searchLine = "Java";
         String folderName = "Java folder";
-        SearchPageObject searchPageObject = new SearchPageObject(driver);
+        SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);
         searchPageObject.initSearchInput();
         searchPageObject.typeSearchLine(searchLine);
         searchPageObject.clickByArticleWithSubstring("Island of Indonesia");
-        ArticlePageObject articlePageObject = new ArticlePageObject(driver);
+        ArticlePageObject articlePageObject = ArticlePageObjectFactory.get(driver);
         articlePageObject.waitForTitleElement();
         String firstArticleTitle = articlePageObject.getArticleTitle();
-        articlePageObject.addArticleToMyListAndCreateFolder(folderName);
+
+        if (Platform.getInstance().isAndroid()) {
+            articlePageObject.addArticleToMyListAndCreateFolder(folderName);
+        } else {
+            articlePageObject.addArticleToMySaved();
+        }
         articlePageObject.closeArticle();
         searchPageObject.initSearchInput();
+        searchPageObject.clearSearchInput();
         searchPageObject.typeSearchLine(searchLine);
         searchPageObject.clickByArticleWithSubstring("Object-oriented programming language");
         articlePageObject.waitForTitleElement();
-        String secondArticleTitle = articlePageObject.getArticleTitle();
-        articlePageObject.addArticleToMyList(folderName);
-        articlePageObject.closeArticle();
-        NavigationUI navigationUI = new NavigationUI(driver);
+        if (Platform.getInstance().isAndroid()) {
+            articlePageObject.addArticleToMyList(folderName);
+        } else {
+            articlePageObject.addArticleToMySaved();
+        }
+        NavigationUI navigationUI = NavigationUIFactory.get(driver);
+        MyListsPageObject myListsPageObject = MyListsPageObjectFactory.get(driver);
+        if (Platform.getInstance().isAndroid()) {
+            articlePageObject.closeArticle();
+        } else {
+            navigationUI.clickGoToStartScreen();
+        }
         navigationUI.clickMyLists();
-        MyListsPageObject myListsPageObject = new MyListsPageObject(driver);
-        myListsPageObject.openFolderByName(folderName);
-        FolderPageObject folderPageObject = new FolderPageObject(driver);
+        FolderPageObject folderPageObject = FolderPageObjectFactory.get(driver);
+        if (Platform.getInstance().isAndroid()) {
+            myListsPageObject.openFolderByName(folderName);
+        }
         folderPageObject.swipeByArticleToDelete(firstArticleTitle);
-        List articles = folderPageObject.getAllArticles();
 
-        assertEquals("The number of articles is not equal to 1", 1, articles.size());
-
-        folderPageObject.clickByArticleWithTitle(secondArticleTitle);
-        String actualArticleTitle = articlePageObject.getArticleTitle();
-
-        assertEquals(
-                actualArticleTitle + " is not equal to " + secondArticleTitle,
-                secondArticleTitle,
-                actualArticleTitle
-        );
+        folderPageObject.assertThatArticleIsPresent("Island of Indonesia");
+        folderPageObject.assertThatArticleIsNotPresent("Object-oriented programming language");
     }
 }

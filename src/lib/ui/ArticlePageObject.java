@@ -1,18 +1,19 @@
 package lib.ui;
 
 import io.appium.java_client.AppiumDriver;
+import lib.Platform;
 import org.openqa.selenium.WebElement;
 
-public class ArticlePageObject extends MainPageObject {
-    private static final String
-        ARTICLE_TITLE = "xpath://*[@resource-id='org.wikipedia:id/view_page_title_text']",
-        OPTIONS_BUTTON = "xpath://android.widget.ImageView[@content-desc='More options']",
-        ADD_TO_MY_LIST_BUTTON = "xpath://*[@text='Add to reading list']",
-        ADD_TO_MY_LIST_OVERLAY = "xpath://*[@text='GOT IT']",
-        MY_LIST_NAME_INPUT = "xpath://*[@resource-id='org.wikipedia:id/text_input']",
-        CLOSE_ARTICLE_BUTTON = "xpath://*[@content-desc='Navigate up']",
-        FOLDER_BY_NAME_TPL = "xpath://*[@text='{FOLDER_NAME}']",
-        MY_LIST_OK_BUTTON = "xpath://*[@text='OK']";
+abstract public class ArticlePageObject extends MainPageObject {
+    protected static String
+        ARTICLE_TITLE,
+        OPTIONS_BUTTON,
+        ADD_TO_MY_LIST_BUTTON,
+        ADD_TO_MY_LIST_OVERLAY,
+        MY_LIST_NAME_INPUT,
+        CLOSE_ARTICLE_BUTTON,
+        FOLDER_BY_NAME_TPL,
+        MY_LIST_OK_BUTTON;
 
 
     private static String getFolderXpathByName(String folderName) {
@@ -27,12 +28,17 @@ public class ArticlePageObject extends MainPageObject {
         return this.waitForElementPresent(
                 ARTICLE_TITLE,
                 "Could not find article title on screen",
-                15
+                10
         );
     }
 
     public String getArticleTitle() {
-        return this.waitForTitleElement().getText();
+        WebElement titleElement = this.waitForTitleElement();
+        if (Platform.getInstance().isAndroid()) {
+            return titleElement.getText();
+        } else {
+            return titleElement.getAttribute("name");
+        }
     }
 
     public void addArticleToMyListAndCreateFolder(String folderName) {
@@ -66,6 +72,14 @@ public class ArticlePageObject extends MainPageObject {
         this.waitForElementAndClick(
                 MY_LIST_OK_BUTTON,
                 "Could not find the 'OK' button",
+                5
+        );
+    }
+
+    public void addArticleToMySaved() {
+        this.waitForElementAndClick(
+                ADD_TO_MY_LIST_BUTTON,
+                "Could not find add to my list button",
                 5
         );
     }

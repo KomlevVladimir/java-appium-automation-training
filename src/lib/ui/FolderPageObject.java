@@ -1,16 +1,15 @@
 package lib.ui;
 
 import io.appium.java_client.AppiumDriver;
+import lib.Platform;
 import org.openqa.selenium.By;
 
 import java.util.List;
 
-import static org.openqa.selenium.By.xpath;
-
-public class FolderPageObject extends MainPageObject {
-    private static final String
-        ARTICLES = "xpath://*[@resource-id='org.wikipedia:id/page_list_item_container']",
-        ARTICLE_BY_TITLE_TPL = "xpath://*[@text='{TITLE}']";
+abstract public class FolderPageObject extends MainPageObject {
+    protected static String
+        ARTICLES,
+        ARTICLE_BY_TITLE_TPL;
 
     public FolderPageObject(AppiumDriver driver) {
         super(driver);
@@ -49,7 +48,11 @@ public class FolderPageObject extends MainPageObject {
                 articleXpath,
                 "Could not find saver article with title" + articleTitle
         );
+        if (Platform.getInstance().isIOS()) {
+            this.clickElementToTheRightUpperCorner(articleXpath, "Could not find saved article");
+        }
         this.waitForArticleToDisappearByTitle(articleTitle);
+
     }
 
     public void clickByArticleWithTitle(String articleTitle) {
@@ -59,5 +62,15 @@ public class FolderPageObject extends MainPageObject {
                 "Could not find article with title " + articleTitle,
                 5
         );
+    }
+
+    public void assertThatArticleIsPresent(String article) {
+        String articleXpath = getSavedArticleXpathByTitle(article);
+        this.assertElementPresent(articleXpath, "Article is not present on the screen");
+    }
+
+    public void assertThatArticleIsNotPresent(String article) {
+        String articleXpath = getSavedArticleXpathByTitle(article);
+        this.assertElementNotPresent(articleXpath, "Article is present on the screen");
     }
 }

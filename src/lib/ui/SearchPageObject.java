@@ -1,19 +1,21 @@
 package lib.ui;
 
 import io.appium.java_client.AppiumDriver;
+import lib.Platform;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 import java.util.List;
 
-public class SearchPageObject extends MainPageObject {
-    private static final String
-        SEARCH_INIT_ELEMENTS = "xpath://*[contains(@text, 'Search Wikipedia')]",
-        SEARCH_INPUT = "xpath://*[@resource-id='org.wikipedia:id/search_src_text']",
-        SEARCH_CANCEL_BUTTON = "xpath://*[@resource-id='org.wikipedia:id/search_close_btn']",
-        SEARCH_RESULT_ELEMENT = "xpath://*[@resource-id='org.wikipedia:id/page_list_item_title']",
-        SEARCH_RESULT_BY_TITLE_AND_DESCRIPTION_TPL = "xpath://*[@resource-id='org.wikipedia:id/page_list_item_title'][@text='{TITLE}']/parent::*/*[@resource-id='org.wikipedia:id/page_list_item_description'][@text='{DESCRIPTION}']/parent::*",
-        SEARCH_RESULT_BY_SUBSTRING_TPL = "xpath://*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='{SUBSTRING}']";
+abstract public class SearchPageObject extends MainPageObject {
+    protected static String
+        SEARCH_INIT_ELEMENT,
+        SEARCH_INPUT,
+        SEARCH_CANCEL_BUTTON,
+        SEARCH_RESULT_ELEMENT,
+        SEARCH_RESULT_BY_TITLE_AND_DESCRIPTION_TPL,
+        SEARCH_RESULT_BY_SUBSTRING_TPL,
+        CLEAR_TEXT_BUTTON;
 
 
     public SearchPageObject(AppiumDriver driver) {
@@ -30,7 +32,7 @@ public class SearchPageObject extends MainPageObject {
 
     public void initSearchInput() {
         this.waitForElementAndClick(
-                SEARCH_INIT_ELEMENTS,
+                SEARCH_INIT_ELEMENT,
                 "Could not find and click search init element",
                 5
         );
@@ -47,6 +49,21 @@ public class SearchPageObject extends MainPageObject {
                 "Could not find and click close button",
                 5
         );
+    }
+
+    public void clearSearchInput() {
+        if (Platform.getInstance().isAndroid()) {
+            this.waitElementAndClear(
+                    SEARCH_INPUT,
+                    "Could not find and type search input",
+                    5);
+        } else {
+            this.waitForElementAndClick(
+                    CLEAR_TEXT_BUTTON,
+                    "Could not find clear text button,",
+                    5
+            );
+        }
     }
 
     public void typeSearchLine(String searchLine) {
@@ -77,7 +94,7 @@ public class SearchPageObject extends MainPageObject {
         this.waitForElementAndClick(
                 articleTitleXpath,
                 "Could not find " + substring + " article",
-                15
+                10
         );
     }
 
