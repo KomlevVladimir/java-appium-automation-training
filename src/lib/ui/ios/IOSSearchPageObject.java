@@ -18,4 +18,3 @@ public class IOSSearchPageObject extends SearchPageObject {
         super(driver);
     }
 }
-
