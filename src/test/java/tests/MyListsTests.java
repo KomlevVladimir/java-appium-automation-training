@@ -50,7 +50,7 @@ public class MyListsTests extends CoreTestCase {
         }
         folderPageObject.swipeByArticleToDelete(firstArticleTitle);
 
-        folderPageObject.assertThatArticleIsPresent("Island of Indonesia");
-        folderPageObject.assertThatArticleIsNotPresent("Object-oriented programming language");
+        folderPageObject.assertThatArticleIsPresent("object-oriented programming language");
+        folderPageObject.assertThatArticleIsNotPresent("island of Indonesia");
     }
 }

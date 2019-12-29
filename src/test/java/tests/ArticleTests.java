@@ -17,6 +17,7 @@ public class ArticleTests extends CoreTestCase {
         searchPageObject.typeSearchLine(searchLine);
         searchPageObject.clickByArticleWithSubstring("Appium");
         ArticlePageObject articlePageObject = ArticlePageObjectFactory.get(driver);
+        articlePageObject.waitForTitleElement();
         articlePageObject.assertTitleIsPresent();
     }
 }

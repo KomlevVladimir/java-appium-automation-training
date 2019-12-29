@@ -59,7 +59,6 @@ public class MainPageObject {
 
     public int getAmountOfElements(String locator) {
         By by = this.getLocatorByString(locator);
-        this.waitForElementPresent(locator, "Could not find element with locator " + locator, 5);
         List elements = driver.findElements(by);
         return elements.size();
     }
