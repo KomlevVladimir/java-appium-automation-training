@@ -1,14 +1,15 @@
 package lib.ui;
 
-import io.appium.java_client.AppiumDriver;
 import lib.Platform;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 abstract public class ArticlePageObject extends MainPageObject {
     protected static String
         ARTICLE_TITLE,
         OPTIONS_BUTTON,
         ADD_TO_MY_LIST_BUTTON,
+        REMOVE_FROM_MY_LIST_BUTTON,
         ADD_TO_MY_LIST_OVERLAY,
         MY_LIST_NAME_INPUT,
         CLOSE_ARTICLE_BUTTON,
@@ -20,7 +21,7 @@ abstract public class ArticlePageObject extends MainPageObject {
         return FOLDER_BY_NAME_TPL.replace("{FOLDER_NAME}", folderName);
     }
 
-    public ArticlePageObject(AppiumDriver driver) {
+    public ArticlePageObject(RemoteWebDriver driver) {
         super(driver);
     }
 
@@ -34,7 +35,7 @@ abstract public class ArticlePageObject extends MainPageObject {
 
     public String getArticleTitle() {
         WebElement titleElement = this.waitForTitleElement();
-        if (Platform.getInstance().isAndroid()) {
+        if (Platform.getInstance().isAndroid() || Platform.getInstance().isMW()) {
             return titleElement.getText();
         } else {
             return titleElement.getAttribute("name");
@@ -77,37 +78,44 @@ abstract public class ArticlePageObject extends MainPageObject {
     }
 
     public void addArticleToMySaved() {
+        if (Platform.getInstance().isMW()) {
+            this.removeArticleFromSavedIfItAdded();
+        }
         this.waitForElementAndClick(
                 ADD_TO_MY_LIST_BUTTON,
                 "Could not find add to my list button",
-                5
+                15
         );
     }
 
     public void closeArticle() {
-        this.waitForElementAndClick(
-                CLOSE_ARTICLE_BUTTON,
-                "Could not find a close button",
-                5
-        );
+        if (Platform.getInstance().isIOS() || Platform.getInstance().isAndroid()) {
+            this.waitForElementAndClick(
+                    CLOSE_ARTICLE_BUTTON,
+                    "Could not find a close button",
+                    15
+            );
+        } else {
+            System.out.println("Method closeArticle() does nothing for platform " + Platform.getInstance().getPlatformVar());
+        }
     }
 
     public void addArticleToMyList(String folderName) {
         this.waitForElementAndClick(
                 OPTIONS_BUTTON,
                 "Could not find the 'More options' element",
-                5
+                15
         );
         this.waitForElementAndClick(
                 ADD_TO_MY_LIST_BUTTON,
                 "Could not find the 'Add to reading list' option",
-                5
+                15
         );
         String folderXpath = getFolderXpathByName(folderName);
         this.waitForElementAndClick(
                 folderXpath,
                 "Could not find the" + folderName,
-                5
+                15
         );
     }
 
@@ -116,5 +124,20 @@ abstract public class ArticlePageObject extends MainPageObject {
                 ARTICLE_TITLE,
                 "We did not find any result"
         );
+    }
+
+    public void removeArticleFromSavedIfItAdded() {
+        if (this.isElementPresent(REMOVE_FROM_MY_LIST_BUTTON)) {
+            this.waitForElementAndClick(
+                    REMOVE_FROM_MY_LIST_BUTTON,
+                    "Could not find and click remove from my list button",
+                    15
+            );
+            this.waitForElementPresent(
+                    ADD_TO_MY_LIST_BUTTON,
+                    "Could not find add to my list button after removing article",
+                    15
+            );
+        }
     }
 }

@@ -1,7 +1,7 @@
 package lib.ui.ios;
 
-import io.appium.java_client.AppiumDriver;
 import lib.ui.NavigationUI;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 public class IOSNavigationUI extends NavigationUI {
     static {
@@ -9,7 +9,7 @@ public class IOSNavigationUI extends NavigationUI {
         GO_TO_START_SCREEN_BUTTON = "id:W";
     }
 
-    public IOSNavigationUI(AppiumDriver driver) {
+    public IOSNavigationUI(RemoteWebDriver driver) {
         super(driver);
     }
 }

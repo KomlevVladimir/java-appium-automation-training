@@ -1,7 +1,7 @@
 package lib.ui.android;
 
-import io.appium.java_client.AppiumDriver;
 import lib.ui.SearchPageObject;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 public class AndroidSearchPageObject extends SearchPageObject {
     static {
@@ -9,11 +9,11 @@ public class AndroidSearchPageObject extends SearchPageObject {
         SEARCH_INPUT = "xpath://*[@resource-id='org.wikipedia:id/search_src_text']";
         SEARCH_CANCEL_BUTTON = "xpath://*[@resource-id='org.wikipedia:id/search_close_btn']";
         SEARCH_RESULT_ELEMENT = "xpath://*[@resource-id='org.wikipedia:id/page_list_item_title']";
-        SEARCH_RESULT_BY_TITLE_AND_DESCRIPTION_TPL = "xpath://*[@resource-id='org.wikipedia:id/page_list_item_title'][@text='{TITLE}']/parent::*/*[@resource-id='org.wikipedia:id/page_list_item_description'][@text='{DESCRIPTION}']/parent::*";
-        SEARCH_RESULT_BY_SUBSTRING_TPL = "xpath://*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='{SUBSTRING}']";
+        SEARCH_RESULT_BY_TITLE_AND_DESCRIPTION_TPL = "xpath://*[@resource-id='org.wikipedia:id/page_list_item_title'][contains(text(), '{TITLE}')]/parent::*/*[@resource-id='org.wikipedia:id/page_list_item_description'][contains(text(), '{DESCRIPTION}')]/parent::*";
+        SEARCH_RESULT_BY_SUBSTRING_TPL = "xpath://*[@resource-id='org.wikipedia:id/page_list_item_container']//*[contains(text(), '{SUBSTRING}')]";
     }
 
-    public AndroidSearchPageObject(AppiumDriver driver) {
+    public AndroidSearchPageObject(RemoteWebDriver driver) {
         super(driver);
     }
 }

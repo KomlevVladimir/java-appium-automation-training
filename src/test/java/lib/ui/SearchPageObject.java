@@ -1,9 +1,9 @@
 package lib.ui;
 
-import io.appium.java_client.AppiumDriver;
 import lib.Platform;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ abstract public class SearchPageObject extends MainPageObject {
         CLEAR_TEXT_BUTTON;
 
 
-    public SearchPageObject(AppiumDriver driver) {
+    public SearchPageObject(RemoteWebDriver driver) {
         super(driver);
     }
 
@@ -34,12 +34,12 @@ abstract public class SearchPageObject extends MainPageObject {
         this.waitForElementAndClick(
                 SEARCH_INIT_ELEMENT,
                 "Could not find and click search init element",
-                5
+                15
         );
         this.waitForElementPresent(
                 SEARCH_INPUT,
                 "Could not find search input",
-                5
+                15
         );
     }
 
@@ -52,7 +52,7 @@ abstract public class SearchPageObject extends MainPageObject {
     }
 
     public void clearSearchInput() {
-        if (Platform.getInstance().isAndroid()) {
+        if (Platform.getInstance().isAndroid() || Platform.getInstance().isMW()) {
             this.waitElementAndClear(
                     SEARCH_INPUT,
                     "Could not find and type search input",
