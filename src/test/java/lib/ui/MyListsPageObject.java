@@ -75,7 +75,7 @@ abstract public class MyListsPageObject extends MainPageObject {
         if (Platform.getInstance().isIOS() || Platform.getInstance().isAndroid()) {
             this.swipeElementToLeft(
                     articleXpath,
-                    "Could not find saver article with title" + articleTitle
+                    "Could not find saver article with title " + articleTitle
             );
         } else {
             String removeLocator = getRemoveButtonByTitle(articleTitle);
@@ -92,7 +92,9 @@ abstract public class MyListsPageObject extends MainPageObject {
             );
             this.assertThatArticleIsRemoved(articleTitle);
         }
-
+        if (Platform.getInstance().isAndroid()) {
+            this.waitForArticleToDisappearByTitle(articleTitle);
+        }
         if (Platform.getInstance().isIOS()) {
             this.clickElementToTheRightUpperCorner(articleXpath, "Could not find saved article");
         }
@@ -100,9 +102,7 @@ abstract public class MyListsPageObject extends MainPageObject {
         if (Platform.getInstance().isMW()) {
             driver.navigate().refresh();
         }
-        if (Platform.getInstance().isAndroid()) {
-            this.waitForArticleToDisappearByTitle(articleTitle);
-        }
+
     }
 
     public void clickByArticleWithTitle(String articleTitle) {

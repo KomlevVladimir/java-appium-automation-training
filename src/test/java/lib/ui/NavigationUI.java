@@ -27,6 +27,12 @@ abstract public class NavigationUI extends MainPageObject {
                     "Could not find navigation button to My lists",
                     5
             );
+        } else {
+            this.waitForElementAndClick(
+                    MY_LIST_LINK,
+                    "Could not find navigation button to My lists",
+                    5
+            );
         }
     }
 
