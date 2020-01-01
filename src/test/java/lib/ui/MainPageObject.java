@@ -95,7 +95,7 @@ public class MainPageObject {
             action
                     .press(point.withCoordinates(rightX, middleY))
                     .waitAction(new WaitOptions().withDuration(ofMillis(150)))
-                    .moveTo(point.withCoordinates(leftX, middleY))
+                    .moveTo(point.withCoordinates(rightX + 100, middleY))
                     .release()
                     .perform();
         } else {

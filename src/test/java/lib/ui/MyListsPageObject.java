@@ -15,6 +15,7 @@ abstract public class MyListsPageObject extends MainPageObject {
             REMOVE_FROM_SAVED_BUTTON,
             ADD_TO_MY_LIST_BUTTON,
             REMOVE_NOTIFICATION,
+            ARTICLE_CONTAINS_TITLE_TPL,
             ARTICLE_BY_TITLE_TPL;
 
     public MyListsPageObject(RemoteWebDriver driver) {
@@ -36,6 +37,10 @@ abstract public class MyListsPageObject extends MainPageObject {
 
     private static String getSavedArticleXpathByTitle(String articleTitle) {
         return ARTICLE_BY_TITLE_TPL.replace("{TITLE}", articleTitle);
+    }
+
+    private static String getSavedArticleXpathContainsTitle(String articleTitle) {
+        return ARTICLE_CONTAINS_TITLE_TPL.replace("{TITLE}", articleTitle);
     }
 
     private static String getRemoveButtonByTitle(String articleTitle) {
@@ -115,12 +120,12 @@ abstract public class MyListsPageObject extends MainPageObject {
     }
 
     public void assertThatArticleIsPresent(String article) {
-        String articleXpath = getSavedArticleXpathByTitle(article);
+        String articleXpath = getSavedArticleXpathContainsTitle(article);
         this.assertElementPresent(articleXpath, "Article is not present on the screen");
     }
 
     public void assertThatArticleIsNotPresent(String article) {
-        String articleXpath = getSavedArticleXpathByTitle(article);
+        String articleXpath = getSavedArticleXpathContainsTitle(article);
         this.assertElementNotPresent(articleXpath, "Article is present on the screen");
     }
 
@@ -130,11 +135,14 @@ abstract public class MyListsPageObject extends MainPageObject {
                 "Could not find remove notification",
                 15
         );
-        Assert.assertTrue("", notification.getText().contains(article));
+        Assert.assertTrue(
+                "Notification with " + article + " is absent",
+                notification.getText().contains(article)
+        );
     }
 
     public void assertThatLeftOneArticle() {
         int amountOfArticles = getAllArticles().size();
-        Assert.assertEquals("", 1, amountOfArticles);
+        Assert.assertEquals("Amount of articles more than one", 1, amountOfArticles);
     }
 }
