@@ -4,6 +4,11 @@
 *.iml
 *.ipr
 out/
+target/
+.classpath
+.project
+.settings/
 
 ### Mac OS ###
 .DS_Store
+
