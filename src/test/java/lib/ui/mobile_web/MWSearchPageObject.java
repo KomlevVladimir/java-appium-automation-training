@@ -11,6 +11,7 @@ public class MWSearchPageObject extends SearchPageObject {
         SEARCH_RESULT_ELEMENT = "css:ul.page-list>li.page-summary";
         SEARCH_RESULT_BY_SUBSTRING_TPL = "xpath://div[contains(@class, 'wikidata-description')][contains(text(), '{SUBSTRING}')]";
         CLEAR_TEXT_BUTTON = "id:Clear text";
+        SEARCH_RESULT_APPIUM_ARTICLE = "xpath://div[contains(@class, 'results-list-container')]/ul/li/a/h3/strong";
         SEARCH_RESULT_BY_TITLE_AND_DESCRIPTION_TPL = "xpath://div/ul/li/a/h3/strong[contains(text(), '{TITLE}')]/../../div[contains(@class, 'wikidata-description')][contains(text(), '{DESCRIPTION}')]";
     }
 

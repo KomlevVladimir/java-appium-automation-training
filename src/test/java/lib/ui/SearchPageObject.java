@@ -15,6 +15,7 @@ abstract public class SearchPageObject extends MainPageObject {
         SEARCH_RESULT_ELEMENT,
         SEARCH_RESULT_BY_TITLE_AND_DESCRIPTION_TPL,
         SEARCH_RESULT_BY_SUBSTRING_TPL,
+        SEARCH_RESULT_APPIUM_ARTICLE,
         CLEAR_TEXT_BUTTON;
 
 
@@ -47,6 +48,14 @@ abstract public class SearchPageObject extends MainPageObject {
         this.waitForElementAndClick(
                 SEARCH_CANCEL_BUTTON,
                 "Could not find and click close button",
+                5
+        );
+    }
+
+    public void clickByAppiumArticle() {
+        this.waitForElementAndClick(
+                SEARCH_RESULT_APPIUM_ARTICLE,
+                "Could not find appium article in search result",
                 5
         );
     }
