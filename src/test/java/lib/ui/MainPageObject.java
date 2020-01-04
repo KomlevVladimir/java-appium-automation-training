@@ -81,7 +81,31 @@ public class MainPageObject {
         }
     }
 
+
+
     public void swipeElementToLeft(String locator, String errorMessage) {
+        if (driver instanceof AppiumDriver) {
+            WebElement element = waitForElementPresent(locator, errorMessage, 10);
+            int leftX = element.getLocation().getX();
+            int rightX = leftX + element.getSize().getWidth();
+            int upperY = element.getLocation().getY();
+            int lowerY = upperY + element.getSize().getHeight();
+            int middleY = (upperY + lowerY) / 2;
+
+            TouchAction action = new TouchAction((AppiumDriver) driver);
+            PointOption point = new PointOption();
+            action
+                    .press(point.withCoordinates(rightX, middleY))
+                    .waitAction(new WaitOptions().withDuration(ofMillis(150)))
+                    .moveTo(point.withCoordinates(leftX, middleY))
+                    .release()
+                    .perform();
+        } else {
+            System.out.println("Method swipeElementToLeft() does nothing for platform " + Platform.getInstance().getPlatformVar());
+        }
+    }
+
+    public void swipeElementToRight(String locator, String errorMessage) {
         if (driver instanceof AppiumDriver) {
             WebElement element = waitForElementPresent(locator, errorMessage, 10);
             int leftX = element.getLocation().getX();
@@ -99,9 +123,8 @@ public class MainPageObject {
                     .release()
                     .perform();
         } else {
-            System.out.println("Method swipeElementToLeft() does nothing for platform " + Platform.getInstance().getPlatformVar());
+            System.out.println("Method swipeElementToRight() does nothing for platform " + Platform.getInstance().getPlatformVar());
         }
-
     }
 
     public void swipeUp(int timeOfSwipe) {

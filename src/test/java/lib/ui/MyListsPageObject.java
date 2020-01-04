@@ -1,5 +1,8 @@
 package lib.ui;
 
+import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.TouchAction;
+import io.appium.java_client.touch.offset.PointOption;
 import lib.Platform;
 import org.junit.Assert;
 import org.openqa.selenium.By;
@@ -16,6 +19,7 @@ abstract public class MyListsPageObject extends MainPageObject {
             ADD_TO_MY_LIST_BUTTON,
             REMOVE_NOTIFICATION,
             ARTICLE_CONTAINS_TITLE_TPL,
+            SYNC_ARTICLES_CLOSE_BUTTON,
             ARTICLE_BY_TITLE_TPL;
 
     public MyListsPageObject(RemoteWebDriver driver) {
@@ -33,6 +37,19 @@ abstract public class MyListsPageObject extends MainPageObject {
                 "Could not find folder by name" + folderName,
                 5
         );
+    }
+
+    private void clickSyncArticlesCloseButton() {
+        this.waitForElementAndClick(
+                SYNC_ARTICLES_CLOSE_BUTTON,
+                "Could not find sync articles close button",
+                15
+        );
+    }
+
+    private void clickDeleteArticleButton() {
+        TouchAction touchAction = new TouchAction((AppiumDriver) driver);
+        touchAction.tap(PointOption.point(361, 225)).perform();
     }
 
     private static String getSavedArticleXpathByTitle(String articleTitle) {
@@ -74,11 +91,21 @@ abstract public class MyListsPageObject extends MainPageObject {
     }
 
     public void swipeByArticleToDelete(String articleTitle) {
+        if (Platform.getInstance().isIOS()) {
+            clickSyncArticlesCloseButton();
+        }
+
         this.waitForArticleToAppearByTitle(articleTitle);
         String articleXpath = getSavedArticleXpathByTitle(articleTitle);
 
-        if (Platform.getInstance().isIOS() || Platform.getInstance().isAndroid()) {
+        if (Platform.getInstance().isIOS()) {
             this.swipeElementToLeft(
+                    articleXpath,
+                    "Could not find saver article with title " + articleTitle
+            );
+            clickDeleteArticleButton();
+        } else if (Platform.getInstance().isAndroid()) {
+            this.swipeElementToRight(
                     articleXpath,
                     "Could not find saver article with title " + articleTitle
             );
@@ -107,7 +134,6 @@ abstract public class MyListsPageObject extends MainPageObject {
         if (Platform.getInstance().isMW()) {
             driver.navigate().refresh();
         }
-
     }
 
     public void clickByArticleWithTitle(String articleTitle) {

@@ -14,6 +14,7 @@ abstract public class ArticlePageObject extends MainPageObject {
         MY_LIST_NAME_INPUT,
         CLOSE_ARTICLE_BUTTON,
         FOLDER_BY_NAME_TPL,
+        APPIUM_ARTICLE_TITLE,
         MY_LIST_OK_BUTTON;
 
 
@@ -29,7 +30,15 @@ abstract public class ArticlePageObject extends MainPageObject {
         return this.waitForElementPresent(
                 ARTICLE_TITLE,
                 "Could not find article title on screen",
-                15
+                5
+        );
+    }
+
+    public WebElement waitForAppiumTitleElement() {
+        return this.waitForElementPresent(
+                APPIUM_ARTICLE_TITLE,
+                "Could not find appium article title on screen",
+                5
         );
     }
 
@@ -122,6 +131,13 @@ abstract public class ArticlePageObject extends MainPageObject {
     public void assertTitleIsPresent() {
         this.assertElementPresent(
                 ARTICLE_TITLE,
+                "We did not find any result"
+        );
+    }
+
+    public void assertAppiumTitleIsPresent() {
+        this.assertElementPresent(
+                APPIUM_ARTICLE_TITLE,
                 "We did not find any result"
         );
     }

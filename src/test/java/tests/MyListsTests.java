@@ -66,10 +66,17 @@ public class MyListsTests extends CoreTestCase {
             myListsPageObject.openFolderByName(FOLDER_NAME);
         }
         myListsPageObject.swipeByArticleToDelete(firstArticleTitle);
-        myListsPageObject.assertThatArticleIsNotPresent("sland of Indonesia");
 
-        if (Platform.getInstance().isIOS() || Platform.getInstance().isAndroid()) {
+        if (Platform.getInstance().isAndroid() || Platform.getInstance().isMW()) {
+            myListsPageObject.assertThatArticleIsNotPresent("sland of Indonesia");
+        } else {
+            myListsPageObject.assertThatArticleIsPresent("sland of Indonesia");
+        }
+
+        if (Platform.getInstance().isAndroid()) {
             myListsPageObject.assertThatArticleIsPresent("bject-oriented programming language");
+        } else if (Platform.getInstance().isIOS()) {
+            myListsPageObject.assertThatArticleIsNotPresent("bject-oriented programming language");
         } else {
             myListsPageObject.assertThatLeftOneArticle();
         }
